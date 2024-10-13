@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useLocation, Link } from "react-router-dom";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -7,10 +7,18 @@ import "@fontsource/roboto/700.css";
 import { Button, Divider, Typography } from "@mui/material";
 
 export default function CountryDetail() {
+  const location = useLocation();
+  console.log(location);
+  // Link Component สามารถส่ง state ได้
+
+  // เมื่อคลิก CountryDetail useLocation() จะ render ข้อมูลก่อนที่ page จะ render
+  // จากเดิมที่ต้องรอ page render ก่อนจึงจะ render ข้อมูล
+  // ทำให้เมื่อ page render เสร็จ page นั้นจะมาพร้อมข้อมูลเลย ไม่เป็น page เปล่าๆ ที่กำลังรอการ render ข้อมูล
+
+  // แต่หาก Lifehack ด้วยการพิมพ์ Link โดยตรงเลย = ก็ต้องหาข้อมูลใหม่อยู่แล้ว เรื่องปกติ
+
   const { countryName } = useParams();
-  const [country, setCountry] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [offline, setOffline] = useState(false);
+  const [country, setCountry] = useState(location.state || null);
   useEffect(() => {
     async function fetchCountry() {
       fetch("https://restcountries.com/v3.1/name/" + countryName)
@@ -20,11 +28,7 @@ export default function CountryDetail() {
           }
           throw Error("Fail to Fetch");
         })
-        .catch((err) => {
-          setLoading(true);
-        })
         .then((data) => {
-          setLoading(true);
           setCountry(data[0]);
         });
     }
@@ -33,36 +37,11 @@ export default function CountryDetail() {
     }
   }, [country]);
 
-  useEffect(() => {
-    function handleOffline() {
-      setOffline(true);
-    }
-    function handleOnline() {
-      setOffline(false);
-    }
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("online", handleOnline);
-    return () => {
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener("online", handleOnline);
-    };
-  }, []);
-
   return (
     <>
-      {offline && (
-        <div
-          style={{
-            backgroundColor: "antiquewhite",
-            padding: "0.5rem",
-            fontSize: "0.875rem",
-            marginBottom: "1rem",
-          }}
-        >
-          ⚠️ You are offline. Please check your internet connection.
-        </div>
-      )}
-      {loading ? (
+      {!country ? (
+        <div>Loading...</div>
+      ) : (
         <main
           style={{
             maxWidth: 400,
@@ -129,8 +108,6 @@ export default function CountryDetail() {
               : "-"}
           </ul>
         </main>
-      ) : (
-        <div>Loading...</div>
       )}
     </>
   );
