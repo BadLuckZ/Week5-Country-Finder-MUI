@@ -39,6 +39,7 @@ function App() {
       fetchData();
     }
   }, [countries]);
+
   useEffect(() => {
     function handleOffline() {
       setOffline(true);
@@ -53,6 +54,7 @@ function App() {
       window.removeEventListener("online", handleOnline);
     };
   }, []);
+
   return (
     <main
       style={{
@@ -71,6 +73,7 @@ function App() {
       >
         Country Finder 2.0
       </Typography>
+
       {offline && (
         <div
           style={{

@@ -4,39 +4,65 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
-import {
-  Button,
-  Divider,
-  Typography,
-  List,
-  ListItem,
-  Skeleton,
-} from "@mui/material";
+import { Button, Divider, Typography } from "@mui/material";
 
 export default function CountryDetail() {
   const navigate = useNavigate();
   const { countryName } = useParams();
   const [country, setCountry] = useState("");
   const [loading, setLoading] = useState(false);
+  const [offline, setOffline] = useState(false);
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/name/" + countryName)
-      .then((res) => {
-        if (res.ok) {
-          return res.json();
-        }
-        throw Error("Fail to Fetch");
-      })
-      .catch((err) => {
-        setLoading(true);
-        setCountry(null);
-      })
-      .then((data) => {
-        setLoading(true);
-        setCountry(data[0]);
-      });
+    async function fetchCountry() {
+      fetch("https://restcountries.com/v3.1/name/" + countryName)
+        .then((res) => {
+          if (res.ok) {
+            return res.json();
+          }
+          throw Error("Fail to Fetch");
+        })
+        .catch((err) => {
+          setLoading(true);
+        })
+        .then((data) => {
+          setLoading(true);
+          setCountry(data[0]);
+        });
+    }
+    if (!country) {
+      fetchCountry();
+    }
+  }, [country]);
+
+  useEffect(() => {
+    function handleOffline() {
+      setOffline(true);
+    }
+    function handleOnline() {
+      setOffline(false);
+    }
+    window.addEventListener("offline", handleOffline);
+    window.addEventListener("online", handleOnline);
+    return () => {
+      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("online", handleOnline);
+    };
   }, []);
+
   return (
     <>
+      {offline && (
+        <div
+          style={{
+            backgroundColor: "antiquewhite",
+            padding: "0.5rem",
+            fontSize: "0.875rem",
+            marginBottom: "1rem",
+          }}
+        >
+          ⚠️ You are offline. Please check your internet connection.
+        </div>
+      )}
       {loading ? (
         <main
           style={{
