@@ -15,10 +15,9 @@ import {
   Skeleton,
   ListItemAvatar,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function App() {
-  const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -163,28 +162,31 @@ function App() {
                       sx={{
                         border: "none",
                         backgroundColor: "transparent",
-                      }}
-                      onClick={() => {
-                        navigate("/" + country.name.common);
+                        "& a": {
+                          color: "inherit",
+                          textDecoration: "none",
+                        },
                       }}
                     >
-                      {elements.map((elm, index) =>
-                        index === 0 ? (
-                          elm
-                        ) : (
-                          <React.Fragment key={index}>
-                            <span
-                              style={{
-                                backgroundColor: "lightblue",
-                                color: "darkblue",
-                              }}
-                            >
-                              {text}
-                            </span>
-                            {elm}
-                          </React.Fragment>
-                        )
-                      )}
+                      <Link to={`/countries/${country.name.common}`}>
+                        {elements.map((elm, index) =>
+                          index === 0 ? (
+                            elm
+                          ) : (
+                            <React.Fragment key={index}>
+                              <span
+                                style={{
+                                  backgroundColor: "lightblue",
+                                  color: "darkblue",
+                                }}
+                              >
+                                {text}
+                              </span>
+                              {elm}
+                            </React.Fragment>
+                          )
+                        )}
+                      </Link>
                     </Typography>
                   </ListItem>
                 );

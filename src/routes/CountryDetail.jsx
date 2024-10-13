@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
@@ -7,7 +7,6 @@ import "@fontsource/roboto/700.css";
 import { Button, Divider, Typography } from "@mui/material";
 
 export default function CountryDetail() {
-  const navigate = useNavigate();
   const { countryName } = useParams();
   const [country, setCountry] = useState("");
   const [loading, setLoading] = useState(false);
@@ -70,12 +69,7 @@ export default function CountryDetail() {
             margin: "auto",
           }}
         >
-          <Button
-            sx={{ marginTop: "1rem" }}
-            onClick={() => {
-              navigate("/");
-            }}
-          >
+          <Button component={Link} to="/" sx={{ marginTop: "1rem" }}>
             All countries
           </Button>
           <Divider sx={{ marginBlock: "1rem" }} />
