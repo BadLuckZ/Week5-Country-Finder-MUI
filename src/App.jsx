@@ -134,7 +134,7 @@ function App() {
           marginBottom: "1rem",
         }}
       >
-        Country Finder
+        Country Finder 2.0
       </Typography>
       {offline && (
         <div
