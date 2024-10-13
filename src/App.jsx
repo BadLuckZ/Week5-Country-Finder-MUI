@@ -5,8 +5,6 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import {
   MenuItem,
-  Button,
-  Divider,
   Select,
   FormControl,
   InputLabel,
@@ -17,14 +15,15 @@ import {
   Skeleton,
   ListItemAvatar,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+  const navigate = useNavigate();
   const [countries, setCountries] = useState([]);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
   const [language, setLanguage] = useState("eng");
   const [offline, setOffline] = useState(false);
-  const [countryDetail, setCountryDetail] = useState(null);
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
@@ -54,70 +53,6 @@ function App() {
       window.removeEventListener("online", handleOnline);
     };
   }, []);
-  if (countryDetail) {
-    return (
-      <main
-        style={{
-          maxWidth: 400,
-          margin: "auto",
-        }}
-      >
-        <Button
-          sx={{ marginTop: "1rem" }}
-          onClick={() => setCountryDetail(null)}
-        >
-          All countries
-        </Button>
-        <Divider sx={{ marginBlock: "1rem" }} />
-        <Typography
-          variant="h1"
-          sx={{
-            fontSize: "3rem",
-            fontWeight: 500,
-            marginTop: "0.5rem",
-          }}
-        >
-          {countryDetail.name.common}
-        </Typography>
-        <Typography variant="overline" sx={{ marginBottom: "1rem" }}>
-          {countryDetail.region}
-        </Typography>
-
-        <img
-          src={countryDetail.flags.svg}
-          alt={countryDetail.flags.alt}
-          width="100%"
-          style={{ aspectRatio: 2 }}
-        />
-        <Typography variant="h3" sx={{ fontSize: "1.5rem", marginTop: "1rem" }}>
-          Capital
-        </Typography>
-        <ul>
-          {countryDetail.capital
-            ? countryDetail.capital?.map((item) => <li key={item}>{item}</li>)
-            : "-"}
-        </ul>
-
-        <Typography variant="h3" sx={{ fontSize: "1.5rem", marginTop: "1rem" }}>
-          Timezones
-        </Typography>
-        <ul>
-          {countryDetail.timezones
-            ? countryDetail.timezones?.map((item) => <li key={item}>{item}</li>)
-            : "-"}
-        </ul>
-
-        <Typography variant="h3" sx={{ fontSize: "1.5rem", marginTop: "1rem" }}>
-          Borders
-        </Typography>
-        <ul>
-          {countryDetail.borders
-            ? countryDetail.borders?.map((item) => <li key={item}>{item}</li>)
-            : "-"}
-        </ul>
-      </main>
-    );
-  }
   return (
     <main
       style={{
@@ -227,7 +162,7 @@ function App() {
                         backgroundColor: "transparent",
                       }}
                       onClick={() => {
-                        setCountryDetail(country);
+                        navigate("/" + country.name.common);
                       }}
                     >
                       {elements.map((elm, index) =>
